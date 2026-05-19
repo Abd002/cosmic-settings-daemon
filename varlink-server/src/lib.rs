@@ -10,14 +10,18 @@
 
 use cosmic_settings_audio_core as audio;
 use cosmic_settings_audio_server as audio_server;
+use cosmic_settings_printers_server as printers_server;
 use std::{os::fd::OwnedFd, path::PathBuf, sync::Arc};
 use tokio::sync::Mutex;
 
 pub async fn init() -> (Daemon, impl Future<Output = ()> + 'static + Send) {
     let (audio_ctx, audio_ctx_rx) = audio_server::Context::new().await;
 
+    let printers_ctx = printers_server::Context::new().await;
+
     let daemon = Daemon(Arc::new(Mutex::new(DaemonInner {
         audio_server: audio_server::Server::new(audio_ctx.clone()).await,
+        printers_server: printers_server::Server::new(printers_ctx.clone()).await,
     })));
 
     (daemon, audio_ctx.run(audio_ctx_rx))
@@ -335,8 +339,28 @@ where
             .set_node_volume_balance(node_id, balance)
             .await
     }
+
+    #[zlink(
+        interface = "com.system76.CosmicSettings.Printers",
+        rename = "ListPrinters"
+    )]
+    pub async fn printers_list_printers(
+        &mut self,
+    ) -> Result<
+        cosmic_settings_printers_core::ListPrintersReply,
+        cosmic_settings_printers_core::Error,
+    > {
+        self.0
+            .lock()
+            .await
+            .printers_server
+            .list_printers()
+            .await
+            .map(|printers| cosmic_settings_printers_core::ListPrintersReply { printers })
+    }
 }
 
 pub struct DaemonInner {
     pub audio_server: audio_server::Server,
+    pub printers_server: printers_server::Server,
 }

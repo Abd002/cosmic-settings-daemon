@@ -6,7 +6,7 @@ license = "GPL-3.0-or-later"
 publish = false
 
 [workspace]
-members = ["audio-client", "audio-core", "audio-server", "config", "cosmic-settings-daemon-config", "geonames", "cosmic-pipewire", "varlink-server"]
+members = ["audio-client", "audio-core", "audio-server", "config", "cosmic-settings-daemon-config", "geonames", "cosmic-pipewire", "varlink-server", "printers-core", "printers-client", "printers-server"]
 
 [workspace.dependencies]
 cosmic-config = { git = "https://github.com/pop-os/libcosmic" }
@@ -29,6 +29,7 @@ cosmic-settings-daemon-config = { path = "./cosmic-settings-daemon-config", feat
     "greeter",
 ] }
 cosmic-settings-varlink-server = { path = "./varlink-server" }
+cosmic-settings-printers-server = { path = "./printers-server" }
 cosmic-theme.export = true
 cosmic-theme.workspace = true
 ctrlc = { version = "3.5.0", features = ["termination"] }
