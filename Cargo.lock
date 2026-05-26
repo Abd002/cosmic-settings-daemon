@@ -1240,9 +1240,7 @@ dependencies = [
 
 [[package]]
 name = "cups_rs"
-version = "0.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6a084af36ca9c6911a41f02acc901e23962d4c1a2431a9f2e277be2eb834dedd"
+version = "0.3.0"
 dependencies = [
  "bindgen 0.71.1",
  "chrono",
