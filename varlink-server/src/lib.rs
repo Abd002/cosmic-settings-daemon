@@ -358,6 +358,23 @@ where
             .await
             .map(|printers| cosmic_settings_printers_core::ListPrintersReply { printers })
     }
+
+    #[zlink(
+        interface = "com.system76.CosmicSettings.Printers",
+        rename = "SetPrinterDefault"
+    )]
+    pub async fn printers_set_printer_default(
+        &mut self,
+        id: String,
+        password: String,
+    ) -> Result<(), cosmic_settings_printers_core::Error> {
+        self.0
+            .lock()
+            .await
+            .printers_server
+            .set_default(&id, password)
+            .await
+    }
 }
 
 pub struct DaemonInner {
