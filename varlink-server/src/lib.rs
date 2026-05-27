@@ -375,6 +375,76 @@ where
             .set_default(&id, password)
             .await
     }
+
+    #[zlink(
+        interface = "com.system76.CosmicSettings.Printers",
+        rename = "GetJobs"
+    )]
+    pub async fn printers_get_jobs(
+        &mut self,
+        name: String,
+        filter: String,
+    ) -> Result<cosmic_settings_printers_core::GetJobsReply, cosmic_settings_printers_core::Error>
+    {
+        self.0
+            .lock()
+            .await
+            .printers_server
+            .get_jobs(&name, &filter)
+            .await
+            .map(|jobs| cosmic_settings_printers_core::GetJobsReply { jobs })
+    }
+
+    #[zlink(
+        interface = "com.system76.CosmicSettings.Printers",
+        rename = "PauseJob"
+    )]
+    pub async fn printers_pause_job(
+        &mut self,
+        printer_uri: String,
+        id: i32,
+    ) -> Result<(), cosmic_settings_printers_core::Error> {
+        self.0
+            .lock()
+            .await
+            .printers_server
+            .pause_job(&printer_uri, id)
+            .await
+    }
+
+    #[zlink(
+        interface = "com.system76.CosmicSettings.Printers",
+        rename = "ResumeJob"
+    )]
+    pub async fn printers_resume_job(
+        &mut self,
+        printer_uri: String,
+        id: i32,
+    ) -> Result<(), cosmic_settings_printers_core::Error> {
+        self.0
+            .lock()
+            .await
+            .printers_server
+            .resume_job(&printer_uri, id)
+            .await
+    }
+
+    #[zlink(
+        interface = "com.system76.CosmicSettings.Printers",
+        rename = "CancelJob"
+    )]
+    pub async fn printers_cancel_job(
+        &mut self,
+        printer_uri: String,
+        id: i32,
+    ) -> Result<(), cosmic_settings_printers_core::Error> {
+        self.0
+            .lock()
+            .await
+            .printers_server
+            .cancel_job(&printer_uri, id)
+            .await
+    }
 }
 
 pub struct DaemonInner {
