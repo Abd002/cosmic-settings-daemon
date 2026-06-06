@@ -366,13 +366,12 @@ where
     pub async fn printers_set_printer_default(
         &mut self,
         printer_id: String,
-        password: String,
     ) -> Result<(), cosmic_settings_printers_core::Error> {
         self.0
             .lock()
             .await
             .printers_server
-            .set_default(&printer_id, password)
+            .set_default(&printer_id)
             .await
     }
 
