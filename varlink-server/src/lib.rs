@@ -365,24 +365,21 @@ where
     )]
     pub async fn printers_set_printer_default(
         &mut self,
-        id: String,
+        printer_id: String,
         password: String,
     ) -> Result<(), cosmic_settings_printers_core::Error> {
         self.0
             .lock()
             .await
             .printers_server
-            .set_default(&id, password)
+            .set_default(&printer_id, password)
             .await
     }
 
-    #[zlink(
-        interface = "com.system76.CosmicSettings.Printers",
-        rename = "GetJobs"
-    )]
+    #[zlink(interface = "com.system76.CosmicSettings.Printers", rename = "GetJobs")]
     pub async fn printers_get_jobs(
         &mut self,
-        name: String,
+        printer_id: String,
         filter: String,
     ) -> Result<cosmic_settings_printers_core::GetJobsReply, cosmic_settings_printers_core::Error>
     {
@@ -390,7 +387,7 @@ where
             .lock()
             .await
             .printers_server
-            .get_jobs(&name, &filter)
+            .get_jobs(&printer_id, &filter)
             .await
             .map(|jobs| cosmic_settings_printers_core::GetJobsReply { jobs })
     }
@@ -401,14 +398,14 @@ where
     )]
     pub async fn printers_pause_job(
         &mut self,
-        printer_uri: String,
-        id: i32,
+        printer_id: String,
+        job_id: i32,
     ) -> Result<(), cosmic_settings_printers_core::Error> {
         self.0
             .lock()
             .await
             .printers_server
-            .pause_job(&printer_uri, id)
+            .pause_job(&printer_id, job_id)
             .await
     }
 
@@ -418,14 +415,14 @@ where
     )]
     pub async fn printers_resume_job(
         &mut self,
-        printer_uri: String,
-        id: i32,
+        printer_id: String,
+        job_id: i32,
     ) -> Result<(), cosmic_settings_printers_core::Error> {
         self.0
             .lock()
             .await
             .printers_server
-            .resume_job(&printer_uri, id)
+            .resume_job(&printer_id, job_id)
             .await
     }
 
@@ -435,14 +432,14 @@ where
     )]
     pub async fn printers_cancel_job(
         &mut self,
-        printer_uri: String,
-        id: i32,
+        printer_id: String,
+        job_id: i32,
     ) -> Result<(), cosmic_settings_printers_core::Error> {
         self.0
             .lock()
             .await
             .printers_server
-            .cancel_job(&printer_uri, id)
+            .cancel_job(&printer_id, job_id)
             .await
     }
 }
