@@ -375,6 +375,26 @@ where
             .await
     }
 
+    #[zlink(
+        interface = "com.system76.CosmicSettings.Printers",
+        rename = "PrintTestPage"
+    )]
+    pub async fn printers_print_test_page(
+        &mut self,
+        printer_id: String,
+    ) -> Result<
+        cosmic_settings_printers_core::PrintTestPageReply,
+        cosmic_settings_printers_core::Error,
+    > {
+        self.0
+            .lock()
+            .await
+            .printers_server
+            .print_test_page(&printer_id)
+            .await
+            .map(|job_id| cosmic_settings_printers_core::PrintTestPageReply { job_id })
+    }
+
     #[zlink(interface = "com.system76.CosmicSettings.Printers", rename = "GetJobs")]
     pub async fn printers_get_jobs(
         &mut self,
