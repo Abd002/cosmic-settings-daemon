@@ -361,6 +361,41 @@ where
 
     #[zlink(
         interface = "com.system76.CosmicSettings.Printers",
+        rename = "ListDiscoveredPrinters"
+    )]
+    pub async fn printers_list_discovered_printers(
+        &mut self,
+    ) -> Result<
+        cosmic_settings_printers_core::ListDiscoveredPrintersReply,
+        cosmic_settings_printers_core::Error,
+    > {
+        self.0
+            .lock()
+            .await
+            .printers_server
+            .list_discovered_printers()
+            .await
+            .map(|printers| cosmic_settings_printers_core::ListDiscoveredPrintersReply { printers })
+    }
+
+    #[zlink(
+        interface = "com.system76.CosmicSettings.Printers",
+        rename = "AddDiscoveredPrinter"
+    )]
+    pub async fn printers_add_discovered_printer(
+        &mut self,
+        printer_id: String,
+    ) -> Result<(), cosmic_settings_printers_core::Error> {
+        self.0
+            .lock()
+            .await
+            .printers_server
+            .add_discovered_printer(&printer_id)
+            .await
+    }
+
+    #[zlink(
+        interface = "com.system76.CosmicSettings.Printers",
         rename = "SetPrinterDefault"
     )]
     pub async fn printers_set_printer_default(
