@@ -10,14 +10,18 @@
 
 use cosmic_settings_audio_core as audio;
 use cosmic_settings_audio_server as audio_server;
+use cosmic_settings_printers_core as printers;
+use cosmic_settings_printers_server as printers_server;
 use std::{os::fd::OwnedFd, path::PathBuf, sync::Arc};
 use tokio::sync::Mutex;
 
 pub async fn init() -> (Daemon, impl Future<Output = ()> + 'static + Send) {
     let (audio_ctx, audio_ctx_rx) = audio_server::Context::new().await;
+    let printers_ctx = printers_server::Context::new().await;
 
     let daemon = Daemon(Arc::new(Mutex::new(DaemonInner {
         audio_server: audio_server::Server::new(audio_ctx.clone()).await,
+        printers_server: printers_server::Server::new(printers_ctx).await,
     })));
 
     (daemon, audio_ctx.run(audio_ctx_rx))
@@ -335,8 +339,156 @@ where
             .set_node_volume_balance(node_id, balance)
             .await
     }
+
+    #[zlink(
+        interface = "com.system76.CosmicSettings.Printers",
+        rename = "ListPrinters"
+    )]
+    pub async fn printers_list_printers(
+        &mut self,
+    ) -> Result<printers::ListPrintersReply, printers::Error> {
+        self.0
+            .lock()
+            .await
+            .printers_server
+            .list_printers()
+            .await
+            .map(|printers| printers::ListPrintersReply { printers })
+    }
+
+    #[zlink(
+        interface = "com.system76.CosmicSettings.Printers",
+        rename = "ListDiscoveredPrinters"
+    )]
+    pub async fn printers_list_discovered_printers(
+        &mut self,
+    ) -> Result<printers::ListDiscoveredPrintersReply, printers::Error> {
+        self.0
+            .lock()
+            .await
+            .printers_server
+            .list_discovered_printers()
+            .await
+            .map(|printers| printers::ListDiscoveredPrintersReply { printers })
+    }
+
+    #[zlink(
+        interface = "com.system76.CosmicSettings.Printers",
+        rename = "AddDiscoveredPrinter"
+    )]
+    pub async fn printers_add_discovered_printer(
+        &mut self,
+        printer_id: String,
+    ) -> Result<(), printers::Error> {
+        self.0
+            .lock()
+            .await
+            .printers_server
+            .add_discovered_printer(&printer_id)
+            .await
+    }
+
+    #[zlink(
+        interface = "com.system76.CosmicSettings.Printers",
+        rename = "SetPrinterDefault"
+    )]
+    pub async fn printers_set_printer_default(
+        &mut self,
+        printer_id: String,
+    ) -> Result<(), printers::Error> {
+        self.0
+            .lock()
+            .await
+            .printers_server
+            .set_default(&printer_id)
+            .await
+    }
+
+    #[zlink(
+        interface = "com.system76.CosmicSettings.Printers",
+        rename = "PrintTestPage"
+    )]
+    pub async fn printers_print_test_page(
+        &mut self,
+        printer_id: String,
+    ) -> Result<printers::PrintTestPageReply, printers::Error> {
+        self.0
+            .lock()
+            .await
+            .printers_server
+            .print_test_page(&printer_id)
+            .await
+            .map(|job_id| printers::PrintTestPageReply { job_id })
+    }
+
+    #[zlink(interface = "com.system76.CosmicSettings.Printers", rename = "GetJobs")]
+    pub async fn printers_get_jobs(
+        &mut self,
+        printer_id: String,
+        filter: String,
+    ) -> Result<printers::GetJobsReply, printers::Error> {
+        self.0
+            .lock()
+            .await
+            .printers_server
+            .get_jobs(&printer_id, &filter)
+            .await
+            .map(|jobs| printers::GetJobsReply { jobs })
+    }
+
+    #[zlink(
+        interface = "com.system76.CosmicSettings.Printers",
+        rename = "PauseJob"
+    )]
+    pub async fn printers_pause_job(
+        &mut self,
+        printer_id: String,
+        job_id: i32,
+    ) -> Result<(), printers::Error> {
+        self.0
+            .lock()
+            .await
+            .printers_server
+            .pause_job(&printer_id, job_id)
+            .await
+    }
+
+    #[zlink(
+        interface = "com.system76.CosmicSettings.Printers",
+        rename = "ResumeJob"
+    )]
+    pub async fn printers_resume_job(
+        &mut self,
+        printer_id: String,
+        job_id: i32,
+    ) -> Result<(), printers::Error> {
+        self.0
+            .lock()
+            .await
+            .printers_server
+            .resume_job(&printer_id, job_id)
+            .await
+    }
+
+    #[zlink(
+        interface = "com.system76.CosmicSettings.Printers",
+        rename = "CancelJob"
+    )]
+    pub async fn printers_cancel_job(
+        &mut self,
+        printer_id: String,
+        job_id: i32,
+    ) -> Result<(), printers::Error> {
+        self.0
+            .lock()
+            .await
+            .printers_server
+            .cancel_job(&printer_id, job_id)
+            .await
+    }
 }
 
 pub struct DaemonInner {
     pub audio_server: audio_server::Server,
+    pub printers_server: printers_server::Server,
 }
