@@ -1049,7 +1049,7 @@ dependencies = [
 [[package]]
 name = "cosmic-settings-printers-core"
 version = "0.1.0"
-source = "git+https://github.com/Abd002/cosmic-printers.git#c4ef3432b2295dbac25a58363f427519dacb4ff7"
+source = "git+https://github.com/Abd002/cosmic-printers.git#95d4bfdf7a1a5a9cb5a990a7284d070c7ca87cff"
 dependencies = [
  "serde",
  "zlink",
@@ -1058,13 +1058,15 @@ dependencies = [
 [[package]]
 name = "cosmic-settings-printers-server"
 version = "0.1.0"
-source = "git+https://github.com/Abd002/cosmic-printers.git#c4ef3432b2295dbac25a58363f427519dacb4ff7"
+source = "git+https://github.com/Abd002/cosmic-printers.git#95d4bfdf7a1a5a9cb5a990a7284d070c7ca87cff"
 dependencies = [
  "cosmic-config",
  "cosmic-settings-printers-core",
  "cups_rs",
+ "futures-util",
  "serde",
  "tokio",
+ "zbus",
  "zlink",
 ]
 
