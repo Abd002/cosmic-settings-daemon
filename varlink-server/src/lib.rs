@@ -390,6 +390,40 @@ where
 
     #[zlink(
         interface = "com.system76.CosmicSettings.Printers",
+        rename = "DeletePrinter"
+    )]
+    pub async fn printers_delete_printer(
+        &mut self,
+        printer_id: String,
+    ) -> Result<(), printers::Error> {
+        self.0
+            .lock()
+            .await
+            .printers_server
+            .delete_printer(&printer_id)
+            .await
+    }
+
+    #[zlink(
+        interface = "com.system76.CosmicSettings.Printers",
+        rename = "SetPrinterAcceptJobs"
+    )]
+    pub async fn printers_set_printer_accept_jobs(
+        &mut self,
+        printer_id: String,
+        enabled: bool,
+        reason: String,
+    ) -> Result<(), printers::Error> {
+        self.0
+            .lock()
+            .await
+            .printers_server
+            .set_printer_accept_jobs(&printer_id, enabled, &reason)
+            .await
+    }
+
+    #[zlink(
+        interface = "com.system76.CosmicSettings.Printers",
         rename = "SetPrinterDefault"
     )]
     pub async fn printers_set_printer_default(
@@ -400,7 +434,75 @@ where
             .lock()
             .await
             .printers_server
-            .set_default(&printer_id)
+            .set_printer_default(&printer_id)
+            .await
+    }
+
+    #[zlink(
+        interface = "com.system76.CosmicSettings.Printers",
+        rename = "SetPrinterEnabled"
+    )]
+    pub async fn printers_set_printer_enabled(
+        &mut self,
+        printer_id: String,
+        enabled: bool,
+    ) -> Result<(), printers::Error> {
+        self.0
+            .lock()
+            .await
+            .printers_server
+            .set_printer_enabled(&printer_id, enabled)
+            .await
+    }
+
+    #[zlink(
+        interface = "com.system76.CosmicSettings.Printers",
+        rename = "SetPrinterInfo"
+    )]
+    pub async fn printers_set_printer_info(
+        &mut self,
+        printer_id: String,
+        info: String,
+    ) -> Result<(), printers::Error> {
+        self.0
+            .lock()
+            .await
+            .printers_server
+            .set_printer_info(&printer_id, &info)
+            .await
+    }
+
+    #[zlink(
+        interface = "com.system76.CosmicSettings.Printers",
+        rename = "SetPrinterLocation"
+    )]
+    pub async fn printers_set_printer_location(
+        &mut self,
+        printer_id: String,
+        location: String,
+    ) -> Result<(), printers::Error> {
+        self.0
+            .lock()
+            .await
+            .printers_server
+            .set_printer_location(&printer_id, &location)
+            .await
+    }
+
+    #[zlink(
+        interface = "com.system76.CosmicSettings.Printers",
+        rename = "SetPrinterShared"
+    )]
+    pub async fn printers_set_printer_shared(
+        &mut self,
+        printer_id: String,
+        shared: bool,
+    ) -> Result<(), printers::Error> {
+        self.0
+            .lock()
+            .await
+            .printers_server
+            .set_printer_shared(&printer_id, shared)
             .await
     }
 
