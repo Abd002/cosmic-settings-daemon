@@ -440,6 +440,24 @@ where
 
     #[zlink(
         interface = "com.system76.CosmicSettings.Printers",
+        rename = "SetPrinterOptionDefault"
+    )]
+    pub async fn printers_set_printer_option_default(
+        &mut self,
+        printer_id: String,
+        option: String,
+        values: Vec<String>,
+    ) -> Result<(), printers::Error> {
+        self.0
+            .lock()
+            .await
+            .printers_server
+            .set_printer_option_default(&printer_id, &option, &values)
+            .await
+    }
+
+    #[zlink(
+        interface = "com.system76.CosmicSettings.Printers",
         rename = "SetPrinterEnabled"
     )]
     pub async fn printers_set_printer_enabled(
