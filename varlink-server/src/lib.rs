@@ -375,6 +375,26 @@ where
 
     #[zlink(
         interface = "com.system76.CosmicSettings.Printers",
+        rename = "ListPrinterApplications"
+    )]
+    pub async fn printers_list_printer_applications(
+        &mut self,
+    ) -> Result<printers::ListPrinterApplicationsReply, printers::Error> {
+        self.0
+            .lock()
+            .await
+            .printers_server
+            .list_printer_applications()
+            .await
+            .map(
+                |printer_applications| printers::ListPrinterApplicationsReply {
+                    printer_applications,
+                },
+            )
+    }
+
+    #[zlink(
+        interface = "com.system76.CosmicSettings.Printers",
         rename = "WatchPrinters",
         more
     )]
