@@ -12,6 +12,7 @@ use cosmic_settings_audio_core as audio;
 use cosmic_settings_audio_server as audio_server;
 use cosmic_settings_printers_core as printers;
 use cosmic_settings_printers_server as printers_server;
+use futures_util::Stream;
 use std::{os::fd::OwnedFd, path::PathBuf, sync::Arc};
 use tokio::sync::Mutex;
 
@@ -370,6 +371,18 @@ where
             .list_discovered_printers()
             .await
             .map(|printers| printers::ListDiscoveredPrintersReply { printers })
+    }
+
+    #[zlink(
+        interface = "com.system76.CosmicSettings.Printers",
+        rename = "WatchPrinters",
+        more
+    )]
+    pub async fn printers_watch_printers(
+        &mut self,
+        _more: bool,
+    ) -> impl Stream<Item = zlink::Reply<printers::PrintersEvent>> + Unpin {
+        self.0.lock().await.printers_server.watch_printers()
     }
 
     #[zlink(

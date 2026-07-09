@@ -1049,8 +1049,9 @@ dependencies = [
 [[package]]
 name = "cosmic-settings-printers-core"
 version = "0.1.0"
-source = "git+https://github.com/Abd002/cosmic-printers.git#b9b120e2511398ae12d8a2a6cd42764ab24262d6"
+source = "git+https://github.com/Abd002/cosmic-printers.git#712fc01cae6f849b7a5986115ab84fd9ec913a4a"
 dependencies = [
+ "nix 0.30.1",
  "serde",
  "zlink",
 ]
@@ -1058,7 +1059,7 @@ dependencies = [
 [[package]]
 name = "cosmic-settings-printers-server"
 version = "0.1.0"
-source = "git+https://github.com/Abd002/cosmic-printers.git#b9b120e2511398ae12d8a2a6cd42764ab24262d6"
+source = "git+https://github.com/Abd002/cosmic-printers.git#712fc01cae6f849b7a5986115ab84fd9ec913a4a"
 dependencies = [
  "cosmic-config",
  "cosmic-settings-printers-core",
@@ -3604,6 +3605,7 @@ dependencies = [
  "cfg-if",
  "cfg_aliases",
  "libc",
+ "memoffset",
 ]
 
 [[package]]
