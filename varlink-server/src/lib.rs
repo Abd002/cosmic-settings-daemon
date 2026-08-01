@@ -18,11 +18,10 @@ use tokio::sync::Mutex;
 
 pub async fn init() -> (Daemon, impl Future<Output = ()> + 'static + Send) {
     let (audio_ctx, audio_ctx_rx) = audio_server::Context::new().await;
-    let printers_ctx = printers_server::Context::new().await;
 
     let daemon = Daemon(Arc::new(Mutex::new(DaemonInner {
         audio_server: audio_server::Server::new(audio_ctx.clone()).await,
-        printers_server: printers_server::Server::new(printers_ctx).await,
+        printers_server: printers_server::Server::new(),
     })));
 
     (daemon, audio_ctx.run(audio_ctx_rx))
@@ -355,6 +354,14 @@ where
             .list_printers()
             .await
             .map(|printers| printers::ListPrintersReply { printers })
+    }
+
+    #[zlink(
+        interface = "com.system76.CosmicSettings.Printers",
+        rename = "StartDiscovery"
+    )]
+    pub async fn printers_start_discovery(&mut self) -> Result<(), printers::Error> {
+        self.0.lock().await.printers_server.start_discovery().await
     }
 
     #[zlink(
