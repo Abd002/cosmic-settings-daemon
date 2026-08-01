@@ -596,6 +596,21 @@ where
             .map(|jobs| printers::GetJobsReply { jobs })
     }
 
+    #[zlink(interface = "com.system76.CosmicSettings.Printers", rename = "MoveJob")]
+    pub async fn printers_move_job(
+        &mut self,
+        source_printer_id: String,
+        job_id: i32,
+        destination_printer_id: String,
+    ) -> Result<(), printers::Error> {
+        self.0
+            .lock()
+            .await
+            .printers_server
+            .move_job(&source_printer_id, job_id, &destination_printer_id)
+            .await
+    }
+
     #[zlink(
         interface = "com.system76.CosmicSettings.Printers",
         rename = "PauseJob"

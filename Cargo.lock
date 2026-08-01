@@ -1049,7 +1049,7 @@ dependencies = [
 [[package]]
 name = "cosmic-settings-printers-core"
 version = "0.1.0"
-source = "git+https://github.com/Abd002/cosmic-printers.git#53ea8a792e6734d766b4131cbbca4f63c00e6346"
+source = "git+https://github.com/Abd002/cosmic-printers.git#810bc094b7c4bc94ff84031b1473388fdd9815d1"
 dependencies = [
  "nix 0.30.1",
  "serde",
@@ -1059,7 +1059,7 @@ dependencies = [
 [[package]]
 name = "cosmic-settings-printers-server"
 version = "0.1.0"
-source = "git+https://github.com/Abd002/cosmic-printers.git#53ea8a792e6734d766b4131cbbca4f63c00e6346"
+source = "git+https://github.com/Abd002/cosmic-printers.git#810bc094b7c4bc94ff84031b1473388fdd9815d1"
 dependencies = [
  "cosmic-config",
  "cosmic-settings-printers-core",
@@ -1239,7 +1239,7 @@ dependencies = [
 [[package]]
 name = "cups_rs"
 version = "0.3.0"
-source = "git+https://github.com/Abd002/cups-rs.git?branch=cups3-pr6-signatures#5d4f65daf5d304faf42e291096f671bb1827a957"
+source = "git+https://github.com/Abd002/cups-rs.git?branch=cups3-pr6-signatures#066e36cb3ee1d69d3ddad360c162ccd027854646"
 dependencies = [
  "bindgen 0.71.1",
  "chrono",
