@@ -358,26 +358,107 @@ where
 
     #[zlink(
         interface = "com.system76.CosmicSettings.Printers",
-        rename = "StartDiscovery"
+        rename = "RefreshAvailableDestinations"
     )]
-    pub async fn printers_start_discovery(&mut self) -> Result<(), printers::Error> {
-        self.0.lock().await.printers_server.start_discovery().await
-    }
-
-    #[zlink(
-        interface = "com.system76.CosmicSettings.Printers",
-        rename = "ListDiscoveredPrinters"
-    )]
-    pub async fn printers_list_discovered_printers(
-        &mut self,
-    ) -> Result<printers::ListDiscoveredPrintersReply, printers::Error> {
+    pub async fn printers_refresh_available_destinations(&mut self) -> Result<(), printers::Error> {
         self.0
             .lock()
             .await
             .printers_server
-            .list_discovered_printers()
+            .refresh_available_destinations()
             .await
-            .map(|printers| printers::ListDiscoveredPrintersReply { printers })
+    }
+
+    #[zlink(
+        interface = "com.system76.CosmicSettings.Printers",
+        rename = "StartPrinterApplicationDiscovery"
+    )]
+    pub async fn printers_start_printer_application_discovery(
+        &mut self,
+    ) -> Result<(), printers::Error> {
+        self.0
+            .lock()
+            .await
+            .printers_server
+            .start_printer_application_discovery()
+            .await
+    }
+
+    #[zlink(
+        interface = "com.system76.CosmicSettings.Printers",
+        rename = "StartAddPrinterDiscovery"
+    )]
+    pub async fn printers_start_add_printer_discovery(
+        &mut self,
+    ) -> Result<printers::StartAddPrinterDiscoveryReply, printers::Error> {
+        self.0
+            .lock()
+            .await
+            .printers_server
+            .start_add_printer_discovery()
+            .await
+    }
+
+    #[zlink(
+        interface = "com.system76.CosmicSettings.Printers",
+        rename = "GetAddPrinterDiscovery"
+    )]
+    pub async fn printers_get_add_printer_discovery(
+        &mut self,
+    ) -> Result<printers::AddPrinterDiscoveryReply, printers::Error> {
+        self.0
+            .lock()
+            .await
+            .printers_server
+            .get_add_printer_discovery()
+            .await
+    }
+
+    #[zlink(
+        interface = "com.system76.CosmicSettings.Printers",
+        rename = "ConfigureDiscoveredPrinter"
+    )]
+    pub async fn printers_configure_discovered_printer(
+        &mut self,
+        request: printers::ConfigureDiscoveredPrinterRequest,
+    ) -> Result<printers::ConfigurePrinterReply, printers::Error> {
+        self.0
+            .lock()
+            .await
+            .printers_server
+            .configure_discovered_printer(request)
+            .await
+    }
+
+    #[zlink(
+        interface = "com.system76.CosmicSettings.Printers",
+        rename = "GetPrinterConfiguration"
+    )]
+    pub async fn printers_get_printer_configuration(
+        &mut self,
+        operation_id: String,
+    ) -> Result<printers::ConfigurePrinterReply, printers::Error> {
+        self.0
+            .lock()
+            .await
+            .printers_server
+            .get_printer_configuration(&operation_id)
+            .await
+    }
+
+    #[zlink(
+        interface = "com.system76.CosmicSettings.Printers",
+        rename = "ListManualSetupPrinterApplications"
+    )]
+    pub async fn printers_list_manual_setup_printer_applications(
+        &mut self,
+    ) -> Result<printers::ListManualSetupApplicationsReply, printers::Error> {
+        self.0
+            .lock()
+            .await
+            .printers_server
+            .list_manual_setup_printer_applications()
+            .await
     }
 
     #[zlink(
@@ -410,22 +491,6 @@ where
         _more: bool,
     ) -> impl Stream<Item = zlink::Reply<printers::PrintersEvent>> + Unpin {
         self.0.lock().await.printers_server.watch_printers()
-    }
-
-    #[zlink(
-        interface = "com.system76.CosmicSettings.Printers",
-        rename = "AddDiscoveredPrinter"
-    )]
-    pub async fn printers_add_discovered_printer(
-        &mut self,
-        printer_id: String,
-    ) -> Result<(), printers::Error> {
-        self.0
-            .lock()
-            .await
-            .printers_server
-            .add_discovered_printer(&printer_id)
-            .await
     }
 
     #[zlink(
