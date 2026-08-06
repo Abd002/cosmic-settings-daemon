@@ -646,6 +646,23 @@ where
             .map(|job_id| printers::PrintTestPageReply { job_id })
     }
 
+    #[zlink(
+        interface = "com.system76.CosmicSettings.Printers",
+        rename = "GetPrinterSupplies"
+    )]
+    pub async fn printers_get_printer_supplies(
+        &mut self,
+        printer_id: String,
+    ) -> Result<printers::GetPrinterSuppliesReply, printers::Error> {
+        self.0
+            .lock()
+            .await
+            .printers_server
+            .printer_supplies(&printer_id)
+            .await
+            .map(|supplies| printers::GetPrinterSuppliesReply { supplies })
+    }
+
     #[zlink(interface = "com.system76.CosmicSettings.Printers", rename = "GetJobs")]
     pub async fn printers_get_jobs(
         &mut self,
