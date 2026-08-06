@@ -545,6 +545,19 @@ where
 
     #[zlink(
         interface = "com.system76.CosmicSettings.Printers",
+        rename = "ClearPrinterDefault"
+    )]
+    pub async fn printers_clear_printer_default(&mut self) -> Result<(), printers::Error> {
+        self.0
+            .lock()
+            .await
+            .printers_server
+            .clear_printer_default()
+            .await
+    }
+
+    #[zlink(
+        interface = "com.system76.CosmicSettings.Printers",
         rename = "SetPrinterOptionDefault"
     )]
     pub async fn printers_set_printer_option_default(
