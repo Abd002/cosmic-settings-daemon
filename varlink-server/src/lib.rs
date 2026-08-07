@@ -627,23 +627,6 @@ where
 
     #[zlink(
         interface = "com.system76.CosmicSettings.Printers",
-        rename = "SetPrinterShared"
-    )]
-    pub async fn printers_set_printer_shared(
-        &mut self,
-        printer_id: String,
-        shared: bool,
-    ) -> Result<(), printers::Error> {
-        self.0
-            .lock()
-            .await
-            .printers_server
-            .set_printer_shared(&printer_id, shared)
-            .await
-    }
-
-    #[zlink(
-        interface = "com.system76.CosmicSettings.Printers",
         rename = "PrintTestPage"
     )]
     pub async fn printers_print_test_page(
